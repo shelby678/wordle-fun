@@ -11,6 +11,7 @@ there are about 10,000 more possible guesses.
 import numpy as np
 import random
 import string
+import csv
 
 wordList = np.loadtxt("wordle-answers.txt", dtype=str)
 
@@ -30,6 +31,7 @@ class Game:
     A method that returns the best guess
     """
     def updateBestGuess(self):
+        avgs = []
         if len(self.guessed) > 0:
             self.update()
         bestAvg = np.inf
@@ -38,13 +40,13 @@ class Game:
             i += 1 
             currentAvg = 0
             currentAvg = self.testGuess(g)
-            if self.statusUpdates: print("progress: ", i , "/ ", len(self.posGuesses))
+            avgs.append([g, currentAvg])
+            if self.statusUpdates and i % 10 == 0: print("progress: ", i , "/ ", len(self.posGuesses))
             if currentAvg < bestAvg:
-                if self.statusUpdates: print("Best guess so far: ", g, "- avg:", currentAvg)
                 bestAvg = currentAvg
                 self.bestGuess = g
         if self.statusUpdates: print("Best guess: ", self.bestGuess, "- avg:", bestAvg)
-        return self.bestGuess
+        return (self.bestGuess, avgs)
 
 
     """
@@ -96,12 +98,50 @@ class Game:
     
     def guessNewWord(self, guess):
         self.guessed.append(guess)
+    
+    def playBall(self):
+        while self.bestGuess != self.answer:
+            self.updateBestGuess()
+            self.guessNewWord(self.bestGuess)
+        if self.statusUpdates:
+            print(len(self.guessed), " tries to guess ", self.answer)
+        return len(self.guessed)
+
+
+
+
+
 
 
 
 # main loop
-game = Game(random.choice(wordList), ["house"])
-game.updateBestGuess()
+#answer = random.choice(wordList)
+#print("ANSWER: ", answer)
+#game = Game(answer, ["raise"])
+#game.playBall()
+
+def selfEval():
+    avgGameLength = 0
+    wordListSample = random.sample(list(wordList), 100)
+    i = 0
+    for word in wordListSample:
+        i += 1
+        game = Game(word, ["raise"])
+        avgGameLength += game.playBall()
+        print("AVG: ", avgGameLength/ i)
+    print(avgGameLength / 100)
+
+selfEval()
+
+
+
+
+"""
+myFile = open('avgs.csv', 'w')
+with myFile:
+   writer = csv.writer(myFile)
+   writer.writerows(avgsData)
+"""
 
 
 
