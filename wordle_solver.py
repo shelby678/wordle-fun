@@ -48,7 +48,6 @@ class Game:
         if self.statusUpdates: print("Best guess: ", self.bestGuess, "- avg:", bestAvg)
         return (self.bestGuess, avgs)
 
-
     """
     updates posLetters and posGuesses
     """
@@ -89,7 +88,6 @@ class Game:
         avgGuesses = 0
         newGuesses = self.guessed.copy()
         newGuesses.append(guess)
-
         for pretendAnswer in self.posGuesses:
             pretendGame = Game(pretendAnswer, newGuesses, posGuesses = self.posGuesses)
             pretendGame.update()
@@ -107,19 +105,6 @@ class Game:
             print(len(self.guessed), " tries to guess ", self.answer)
         return len(self.guessed)
 
-
-
-
-
-
-
-
-# main loop
-#answer = random.choice(wordList)
-#print("ANSWER: ", answer)
-#game = Game(answer, ["raise"])
-#game.playBall()
-
 def selfEval():
     avgGameLength = 0
     wordListSample = random.sample(list(wordList), 100)
@@ -129,20 +114,6 @@ def selfEval():
         game = Game(word, ["raise"])
         avgGameLength += game.playBall()
         print("AVG: ", avgGameLength/ i)
-    print(avgGameLength / 100)
+    print("FINAL AVG: ", avgGameLength / 100)
 
 selfEval()
-
-
-
-
-"""
-myFile = open('avgs.csv', 'w')
-with myFile:
-   writer = csv.writer(myFile)
-   writer.writerows(avgsData)
-"""
-
-
-
-
