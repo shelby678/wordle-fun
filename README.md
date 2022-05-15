@@ -4,5 +4,3 @@ Welcome to my wordle solver! The algorithm works by finding the lowest average n
 - Top word: raise
 - Worst word: fuzzy
 - Avg game length: 3.8 guesses
-
-In the future I'd like to train an agent on this game and compare it's performance with the first method
